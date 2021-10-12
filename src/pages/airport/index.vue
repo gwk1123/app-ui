@@ -79,6 +79,7 @@ export default {
           }
         });
       }
+      console.log(JSON.stringify(matchedList))
       this.matchedList = matchedList;
     }
   },

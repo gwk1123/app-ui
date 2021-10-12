@@ -17,56 +17,61 @@
         >返程时间：{{ arrDate }}</div>
       </div>
     </div>
-    <div class="ticket-list-body" v-if="ticketList.length > 0">
-      <div
-        class="ticket-card"
-        v-for="(item, index) in ticketList"
-        :key="index"
-        @click="goBook(item)"
-      >
-        <div class="ticket-card-body fx-row fx-v-center fx-m-between">
-          <div class="ticket-time">
-            <div class="time fx-row fx-v-center fx-m-between">
-              <div>{{ item.depTime }}</div>
-              <img :src="timeIcon" />
-              <div>{{ item.arrTime }}</div>
+    <div class="ticket-list-body">
+        <div
+          class="ticket-card"
+          v-for="(item, index) in ticketList"
+          :key="index"
+          @click="goBook(item)"
+        >
+          <div class="ticket-card-body fx-row fx-v-center fx-m-between">
+            <div class="ticket-time">
+              <div class="time fx-row fx-v-center fx-m-between">
+                <div>{{ item.depTime }}</div>
+                <img :src="timeIcon" />
+                <div>{{ item.arrTime }}</div>
+              </div>
+              <div class="airport fx-row">
+                <div class="airport-dep">{{ item.depAirport }}</div>
+                <div class="airport-arr">{{ item.arrAirport }}</div>
+              </div>
             </div>
-            <div class="airport fx-row">
-              <div class="airport-dep">{{ item.depAirport }}</div>
-              <div class="airport-arr">{{ item.arrAirport }}</div>
-            </div>
+            <div class="ticket-price">￥{{ item.price }}</div>
           </div>
-          <div class="ticket-price">￥{{ item.price }}</div>
+          <div class="ticket-card-footer">{{ flightNo }}</div>
         </div>
-        <div class="ticket-card-footer">{{ flightNo }}</div>
-      </div>
+<!--      </template>-->
     </div>
   </div>
 </template>
 
 <script>
 // 数据
-import airport from "@/data/airport.js";
+import airport from '@/data/airport.js';
 import ticketMock from "@/data/ticket.js";
 // 图片
-import oneway_icon from "@/assets/iconImages/oneway.png";
+import oneway_icon from '@/assets/iconImages/oneway.png';
 import return_icon from "@/assets/iconImages/return.png";
 import timeArrow from "@/assets/iconImages/timeArrow.png";
+
+import { search } from '@/data/webApp';
+
 export default {
+  name: 'zsc',
   data() {
     return {
       dep: {
-        name: "",
-        code: ""
+        name: '',
+        code: ''
       },
       arr: {
-        name: "",
-        code: ""
+        name: '',
+        code: ''
       },
       headIcon: oneway_icon,
       timeIcon: timeArrow,
-      depDate: "",
-      arrDate: "",
+      depDate: '',
+      arrDate: '',
       isDomestic: true,
       depTimeList: [],
       arrTimeList: [],
@@ -203,24 +208,61 @@ export default {
     },
     //  生成航班列表
     createList() {
-      this.createTimeArr(0, 0);
-      this.createTimeArr(0, 1);
-      this.createTimeArr(0, 2);
-      this.createTimeArr(1, 0);
-      this.createTimeArr(1, 1);
-      this.createTimeArr(1, 2);
-      for (let i = 0; i < 9; i++) {
-        let price = this.createPrice();
-        let depAirport = this.depAirport[this.randomNum(0, this.depAirport.length - 1)];
-        let arrAirport = this.arrAirport[this.randomNum(0, this.arrAirport.length - 1)];
-        this.ticketList[i] = {
-          depTime: this.depTimeList[i],
-          arrTime: this.arrTimeList[i],
-          price: price,
-          depAirport,
-          arrAirport
-        };
-      }
+      let q = '{\n' +
+        '    "cid": "6e2b04bf29644892",\n' +
+        '    "tripType": "1",\n' +
+        '    "fromCity": "CAN",\n' +
+        '    "toCity": "WUH",\n' +
+        '    "fromDate": "20211029",\n' +
+        '    "retDate": "",\n' +
+        '    "adultNumber ": 1,\n' +
+        '"childNumber ": 0,\n' +
+        '"infantNumber":0,\n' +
+        '    "channel": "F"\n' +
+        '}';
+
+      search(q).then(response => {
+        if (response.data.status === 0) {
+          console.log(response.data);
+          let routings = response.data.routings;
+          let arrList = [];
+          for (let i = 0; i < routings.length; i++) {
+            let depTime = routings[i].fromSegments[0].depTime.substr(-4);
+            let arrTime = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrTime.substr(-4);
+            let price = routings[i].adultPrice + routings[i].adultTax;
+            let depAirport = routings[i].fromSegments[0].depAirport;
+            let arrAirport = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrAirport;
+            arrList[i] = {
+              depTime: depTime,
+              arrTime: arrTime,
+              price: price,
+              depAirport: depAirport,
+              arrAirport: arrAirport
+            }
+          }
+          this.ticketList = arrList
+        }
+      });
+
+      // this.createTimeArr(0, 0);
+      // this.createTimeArr(0, 1);
+      // this.createTimeArr(0, 2);
+      // this.createTimeArr(1, 0);
+      // this.createTimeArr(1, 1);
+      // this.createTimeArr(1, 2);
+      // for (let i = 0; i < 9; i++) {
+      //   let price = this.createPrice();
+      //   let depAirport = this.depAirport[this.randomNum(0, this.depAirport.length - 1)];
+      //   let arrAirport = this.arrAirport[this.randomNum(0, this.arrAirport.length - 1)];
+      //   this.ticketList[i] = {
+      //     depTime: this.depTimeList[i],
+      //     arrTime: this.arrTimeList[i],
+      //     price: price,
+      //     depAirport,
+      //     arrAirport
+      //   };
+      // }
+      // console.log(this.ticketList);
     },
     goBook(item) {
       this.$router.push({
@@ -234,7 +276,7 @@ export default {
           price: item.price,
           depDate: this.depDate,
           flightNo: this.flightNo,
-          from: 'ticketList'
+          // from: this.ticketList
         }
       })
     }
