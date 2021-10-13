@@ -87,6 +87,7 @@ export default {
   },
   created() {
     let query = this.$route.query;
+    console.log('q',query)
     let {
       uid,
       dep,
@@ -102,15 +103,10 @@ export default {
       routing,
       isRt,
     } = query;
-
-    console.log("query:"+JSON.stringify(query))
-    console.log("routing:"+routing)
-
     let ver = {
       isRt: isRt,
-      routing: JSON.stringify(routing),
+      routing: JSON.parse(routing)
     }
-    console.log("ver:"+JSON.stringify(ver))
     verify(ver).then(response => {
       console.log(response)
       if (response.data.status === 0) {
