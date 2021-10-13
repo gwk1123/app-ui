@@ -8,3 +8,12 @@ export function search(data) {
     data: data
   })
 }
+
+export function keyword(data) {
+  return request({
+    url: '/api/keyword',
+    method: 'post',
+    data: data
+  })
+}
+

@@ -37,6 +37,9 @@ import data from "@/data/airport.js";
 
 // 组件
 import airportTabs from "./components/airportTabs";
+
+import { keyword } from '@/data/webApp';
+
 export default {
   data() {
     return {
@@ -71,16 +74,15 @@ export default {
     },
     search() {
       let matchedList = [];
-      let allAirport = data.domestic.concat(data.international);
-      if (this.inputValue != "") {
-        matchedList = allAirport.filter(item => {
-          if (item.name.indexOf(this.inputValue) != -1) {
-            return item;
+      if (this.inputValue != '') {
+        keyword(this.inputValue).then(response => {
+          if (response.data.code === 200) {
+            console.log(response.data.data);
+            matchedList = response.data.data;
+            this.matchedList = matchedList;
           }
         });
       }
-      console.log(JSON.stringify(matchedList))
-      this.matchedList = matchedList;
     }
   },
   components: {

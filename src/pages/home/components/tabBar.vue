@@ -126,6 +126,8 @@ export default {
       },
       depDate: "",
       arrDate: "",
+      fromDate: "",
+      retDate: "",
       depPlaceholder: "请选择出发地",
       arrPlaceholder: "请选择目的地",
       depdatePlaceholder: "请选择出发日期",
@@ -175,6 +177,8 @@ export default {
           dep: this.dep.code,
           arr: this.arr.code,
           isRt: this.isReturn == true ? 0 : 1,
+          fromDate: this.fromDate,
+          retDate: this.retDate,
           depDate: this.depDate,
           arrDate: this.arrDate
         }
@@ -184,12 +188,15 @@ export default {
     pickDate(item) {
       let selectedDate = item.date;
       this.canShowCalendar = false;
+      let year = selectedDate.getFullYear();
       let month = selectedDate.getMonth() + 1;
       let day = selectedDate.getDate();
       if (this.chooseDateType === "dep") {
         this.depDate = month + "月" + day + "日";
+        this.fromDate = year + '' + month + '' + day;
       } else if (this.chooseDateType === "arr") {
         this.arrDate = month + "月" + day + "日";
+        this.retDate =year + '' + month + '' + day;
       }
     },
     // 选择机场
@@ -232,6 +239,8 @@ export default {
         isReturn: this.isReturn,
         dep: this.dep,
         arr: this.arr,
+        fromDate: this.fromDate,
+        retDate: this.retDate,
         depDate: this.depDate,
         arrDate: this.arrDate
       };
@@ -243,10 +252,12 @@ export default {
     restoreData() {
       let params = localStorage.getItem(this.id);
       params = JSON.parse(params);
-      let { isReturn, dep, arr, depDate, arrDate } = params;
+      let { isReturn, dep, arr, depDate, arrDate , fromDate , retDate } = params;
       this.isReturn = isReturn;
       this.dep = dep;
       this.arr = arr;
+      this.fromDate = fromDate;
+      this.retDate = retDate;
       this.depDate = depDate;
       this.arrDate = arrDate;
     }

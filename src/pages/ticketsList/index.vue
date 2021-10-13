@@ -72,16 +72,18 @@ export default {
       timeIcon: timeArrow,
       depDate: '',
       arrDate: '',
+      fromDate: '',
+      retDate: '',
       isDomestic: true,
       depTimeList: [],
       arrTimeList: [],
       ticketList: [],
-      flightNo: '东航MU5183'
+      flightNo: ''
     };
   },
   created() {
     let query = this.$route.query;
-    let { dep, arr, depDate, arrDate, isRt, uid } = query;
+    let { dep, arr, depDate, arrDate, isRt, uid , fromDate , retDate } = query;
     isRt = isRt == 0 ? true : false;
     this.uid = uid;
     if (isRt) {
@@ -91,7 +93,8 @@ export default {
     this.arrDate = arrDate;
     this.queryCity(dep, 0);
     this.queryCity(arr, 1);
-    this.createList();
+    let q= JSON.stringify(query);
+    this.createList(q);
   },
   methods: {
     // 查询出发地 目的地 详细信息
@@ -207,32 +210,21 @@ export default {
       }
     },
     //  生成航班列表
-    createList() {
-      let q = '{\n' +
-        '    "cid": "6e2b04bf29644892",\n' +
-        '    "tripType": "1",\n' +
-        '    "fromCity": "CAN",\n' +
-        '    "toCity": "WUH",\n' +
-        '    "fromDate": "20211029",\n' +
-        '    "retDate": "",\n' +
-        '    "adultNumber ": 1,\n' +
-        '"childNumber ": 0,\n' +
-        '"infantNumber":0,\n' +
-        '    "channel": "F"\n' +
-        '}';
-
-      search(q).then(response => {
+    createList(query) {
+      search(query).then(response => {
         if (response.data.status === 0) {
-          console.log(response.data);
           let routings = response.data.routings;
           let arrList = [];
           for (let i = 0; i < routings.length; i++) {
+            let flightNo = routings[i].fromSegments[0].flightNumber;
+            this.flightNo = flightNo;
             let depTime = routings[i].fromSegments[0].depTime.substr(-4);
             let arrTime = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrTime.substr(-4);
             let price = routings[i].adultPrice + routings[i].adultTax;
             let depAirport = routings[i].fromSegments[0].depAirport;
             let arrAirport = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrAirport;
             arrList[i] = {
+              flightNo: flightNo,
               depTime: depTime,
               arrTime: arrTime,
               price: price,
@@ -240,29 +232,10 @@ export default {
               arrAirport: arrAirport
             }
           }
-          this.ticketList = arrList
+          this.ticketList = arrList;
+          console.log(JSON.stringify(this.ticketList))
         }
       });
-
-      // this.createTimeArr(0, 0);
-      // this.createTimeArr(0, 1);
-      // this.createTimeArr(0, 2);
-      // this.createTimeArr(1, 0);
-      // this.createTimeArr(1, 1);
-      // this.createTimeArr(1, 2);
-      // for (let i = 0; i < 9; i++) {
-      //   let price = this.createPrice();
-      //   let depAirport = this.depAirport[this.randomNum(0, this.depAirport.length - 1)];
-      //   let arrAirport = this.arrAirport[this.randomNum(0, this.arrAirport.length - 1)];
-      //   this.ticketList[i] = {
-      //     depTime: this.depTimeList[i],
-      //     arrTime: this.arrTimeList[i],
-      //     price: price,
-      //     depAirport,
-      //     arrAirport
-      //   };
-      // }
-      // console.log(this.ticketList);
     },
     goBook(item) {
       this.$router.push({
