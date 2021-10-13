@@ -41,6 +41,9 @@ import payMethods from "./components/payMethods";
 import airport from "@/data/airport.js";
 import saleList from "@/data/sale.js";
 import { dateFormat } from "vux";
+
+import { verify } from '@/data/webApp';
+
 export default {
   data() {
     return {
@@ -95,8 +98,26 @@ export default {
       depTime,
       arrTime,
       type,
-      from
+      from,
+      routing,
+      isRt,
     } = query;
+
+    console.log("query:"+JSON.stringify(query))
+    console.log("routing:"+routing)
+
+    let ver = {
+      isRt: isRt,
+      routing: JSON.stringify(routing),
+    }
+    console.log("ver:"+JSON.stringify(ver))
+    verify(ver).then(response => {
+      console.log(response)
+      if (response.data.status === 0) {
+      }
+    });
+
+
     this.uid = uid;
     this.ticketCard.flightWeek = week;
     this.ticketCard.flightNo = flightNo;

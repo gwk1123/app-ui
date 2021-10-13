@@ -17,3 +17,12 @@ export function keyword(data) {
   })
 }
 
+
+export function verify(data) {
+  return request({
+    url: '/api/verify',
+    method: 'post',
+    data: data
+  })
+}
+

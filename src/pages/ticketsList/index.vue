@@ -38,7 +38,7 @@
             </div>
             <div class="ticket-price">￥{{ item.price }}</div>
           </div>
-          <div class="ticket-card-footer">{{ flightNo }}</div>
+          <div class="ticket-card-footer">{{ item.flightNo }}</div>
         </div>
 <!--      </template>-->
     </div>
@@ -78,7 +78,7 @@ export default {
       depTimeList: [],
       arrTimeList: [],
       ticketList: [],
-      flightNo: ''
+      isRt: '',
     };
   },
   created() {
@@ -86,6 +86,7 @@ export default {
     let { dep, arr, depDate, arrDate, isRt, uid , fromDate , retDate } = query;
     isRt = isRt == 0 ? true : false;
     this.uid = uid;
+    this.isRt = isRt;
     if (isRt) {
       this.headIcon = return_icon;
     }
@@ -216,14 +217,15 @@ export default {
           let routings = response.data.routings;
           let arrList = [];
           for (let i = 0; i < routings.length; i++) {
+            let routing = routings[i];
             let flightNo = routings[i].fromSegments[0].flightNumber;
-            this.flightNo = flightNo;
             let depTime = routings[i].fromSegments[0].depTime.substr(-4);
             let arrTime = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrTime.substr(-4);
             let price = routings[i].adultPrice + routings[i].adultTax;
             let depAirport = routings[i].fromSegments[0].depAirport;
             let arrAirport = routings[i].fromSegments[routings[i].fromSegments.length - 1].arrAirport;
             arrList[i] = {
+              routing: routing,
               flightNo: flightNo,
               depTime: depTime,
               arrTime: arrTime,
@@ -248,7 +250,9 @@ export default {
           arrTime: item.arrTime,
           price: item.price,
           depDate: this.depDate,
-          flightNo: this.flightNo,
+          flightNo: item.flightNo,
+          routing: item.routing,
+          isRt: this.isRt,
           // from: this.ticketList
         }
       })
