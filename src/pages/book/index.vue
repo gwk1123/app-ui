@@ -42,7 +42,7 @@ import airport from "@/data/airport.js";
 import saleList from "@/data/sale.js";
 import { dateFormat } from "vux";
 
-import { verify } from '@/data/webApp';
+import { verify , order } from '@/data/webApp';
 
 export default {
   data() {
@@ -82,7 +82,9 @@ export default {
       pasger: {
         name: "乘机人",
         idNo: ""
-      }
+      },
+      routing: {},
+      pasgerInfos: []
     };
   },
   created() {
@@ -107,8 +109,9 @@ export default {
       isRt: isRt,
       routing: JSON.parse(routing)
     }
+    // localStorage.setItem("routing",routing);
+    this.routing = routing;
     verify(ver).then(response => {
-      console.log(response)
       if (response.data.status === 0) {
       }
     });
@@ -150,6 +153,7 @@ export default {
       this.userInfo.orderList = [];
     }
     this.orderList = this.userInfo.orderList;
+    this.pasgerInfos = this.userInfo.pasgerList;
   },
   methods: {
     findCity(code, type) {
@@ -204,6 +208,27 @@ export default {
         return false;
       }
       this.showPayMethods = true;
+
+      console.log("----------------"+this.routing)
+      console.log("pasgerInfos"+ JSON.stringify(this.pasgerInfos))
+      //生单
+      let contact = {
+        "name": "Marcus/Tom",
+        "address": "spring boot",
+        "postcode": "12345",
+        "email": "13858585@qq.com",
+        "mobile": "13800000000"
+      }
+      let der = {
+        routing: JSON.parse(this.routing),
+        passengers: this.pasgerInfos,
+        contact: contact
+      }
+      order(der).then(response => {
+        if (response.data.status === 0) {
+        }
+      });
+
     },
     // 生成订单号
     createOrderId() {

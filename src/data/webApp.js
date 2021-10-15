@@ -26,3 +26,10 @@ export function verify(data) {
   })
 }
 
+export function order(data) {
+  return request({
+    url: '/api/order',
+    method: 'post',
+    data: data
+  })
+}
