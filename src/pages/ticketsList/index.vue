@@ -138,78 +138,6 @@ export default {
         this.arrAirport = airportArray;
       }
     },
-    // 生成随机整数
-    // randomNum(minNum, maxNum) {
-    //   switch (arguments.length) {
-    //     case 1:
-    //       return parseInt(Math.random() * minNum + 1, 10);
-    //       break;
-    //     case 2:
-    //       return parseInt(Math.random() * (maxNum - minNum + 1) + minNum, 10);
-    //       break;
-    //     default:
-    //       return 0;
-    //       break;
-    //   }
-    // },
-    // // 从大到小排序
-    // sortNumber(a, b) {
-    //   return a - b;
-    // },
-    // // 生成随机数组
-    // randomArray(min, max, num) {
-    //   let arr = [];
-    //   for (let i = 0; i < num; i++) {
-    //     let number = this.randomNum(min, max);
-    //     arr.push(number);
-    //   }
-    //   arr = arr.sort(this.sortNumber);
-    //   return arr;
-    // },
-    // // 生成航班列表
-    // createTimeArr(type, times) {
-    //   let randomArr = this.randomArray(0, 9, 3);
-    //   let depDateArr = [
-    //     ticketMock.depDate1,
-    //     ticketMock.depDate2,
-    //     ticketMock.depDate3
-    //   ];
-    //   let arrDateArr = [
-    //     ticketMock.domesticArrDate1,
-    //     ticketMock.domesticArrDate2,
-    //     ticketMock.domesticArrDate3
-    //   ];
-    //   let interArrDateArr = [
-    //     ticketMock.interArrDate1,
-    //     ticketMock.interArrDate2,
-    //     ticketMock.interArrDate3
-    //   ];
-    //
-    //   if (type === 0) {
-    //     randomArr.forEach(n => {
-    //       this.depTimeList.push(depDateArr[times][n]);
-    //       // console.log(this.depTimeList);
-    //     });
-    //   } else if (type === 1 && this.isDomestic) {
-    //     randomArr.forEach(n => {
-    //       this.arrTimeList.push(arrDateArr[times][n]);
-    //     });
-    //   } else {
-    //     randomArr.forEach(n => {
-    //       this.arrTimeList.push(interArrDateArr[times][n]);
-    //     });
-    //   }
-    // },
-    // // 随机生成价格
-    // createPrice() {
-    //   if (this.isDomestic) {
-    //     let number = this.randomNum(0, 18);
-    //     return ticketMock.domesticPrice[number];
-    //   } else {
-    //     let number = this.randomNum(0, 13);
-    //     return ticketMock.interPrice[number];
-    //   }
-    // },
     //  生成航班列表
     createList(query) {
       search(query).then(response => {
@@ -235,7 +163,6 @@ export default {
             }
           }
           this.ticketList = arrList;
-          console.log(JSON.stringify(this.ticketList))
         }
       });
     },
