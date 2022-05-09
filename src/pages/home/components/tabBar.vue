@@ -191,6 +191,9 @@ export default {
       let year = selectedDate.getFullYear();
       let month = selectedDate.getMonth() + 1;
       let day = selectedDate.getDate();
+      if(month <= 9){
+        month = "0" + month;
+      }
       if (this.chooseDateType === "dep") {
         this.depDate = month + "月" + day + "日";
         this.fromDate = year + '' + month + '' + day;
