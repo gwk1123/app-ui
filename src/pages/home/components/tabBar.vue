@@ -124,9 +124,9 @@ export default {
         name: "",
         code: null
       },
-      depDate: "",
+      depDate: "20230320",
       arrDate: "",
-      fromDate: "",
+      fromDate: "20230320",
       retDate: "",
       depPlaceholder: "请选择出发地",
       arrPlaceholder: "请选择目的地",
